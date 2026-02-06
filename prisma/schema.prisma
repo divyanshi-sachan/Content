@@ -1,0 +1,39 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  contents  Content[]
+}
+
+model Content {
+  id          String   @id @default(cuid())
+  title       String
+  type        String   // "blog" or "youtube"
+  content     String   @db.Text
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  repurposed  RepurposedContent[]
+}
+
+model RepurposedContent {
+  id          String   @id @default(cuid())
+  type        String   // "instagram" or "twitter"
+  text        String   @db.Text
+  contentId   String
+  original    Content  @relation(fields: [contentId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+} 
