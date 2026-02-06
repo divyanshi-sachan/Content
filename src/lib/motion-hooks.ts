@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import type { UseScrollOptions } from "framer-motion";
 import {
   MotionValue,
   useAnimationFrame,
@@ -82,6 +83,7 @@ export const use3DScroll = (
     rotateTo = -1,
     scaleFrom = 0.95,
     scaleTo = 1,
+    offset = ["start 0.9", "end 0.1"],
   }: {
     zFrom?: number;
     zTo?: number;
@@ -89,10 +91,12 @@ export const use3DScroll = (
     rotateTo?: number;
     scaleFrom?: number;
     scaleTo?: number;
+    offset?: [string, string];
   } = {},
 ) => {
   const { scrollYProgress, scrollY } = useScroll({
     target: ref,
+    offset: offset as UseScrollOptions["offset"],
   });
   const velocity = useVelocity(scrollY);
   const velocityBoost = useTransform(velocity, [-900, 0, 900], [1.08, 1, 0.92]);
@@ -110,6 +114,7 @@ export const useSectionMotion = (
 ) => {
   const { scrollYProgress } = useScroll({
     target: ref,
+    offset: (config.offset ?? ["start 0.9", "end 0.1"]) as UseScrollOptions["offset"],
   });
 
   const scale = useTransform(scrollYProgress, [0, 1], [config.minScale ?? 0.985, 1]);
