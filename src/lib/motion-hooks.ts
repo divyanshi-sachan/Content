@@ -19,7 +19,7 @@ type SectionMotionConfig = {
   offset?: [string, string];
 };
 
-export const useCursorMotion = (ref: React.RefObject<HTMLElement>) => {
+export const useCursorMotion = (ref: React.RefObject<HTMLElement | null>) => {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
@@ -47,7 +47,7 @@ export const useCursorMotion = (ref: React.RefObject<HTMLElement>) => {
   return { parallaxX, parallaxY, tiltX, tiltY, innerX, innerY };
 };
 
-export const useCameraTilt = (ref: React.RefObject<HTMLElement>) => {
+export const useCameraTilt = (ref: React.RefObject<HTMLElement | null>) => {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
@@ -74,7 +74,7 @@ export const useCameraTilt = (ref: React.RefObject<HTMLElement>) => {
 };
 
 export const use3DScroll = (
-  ref: React.RefObject<HTMLElement>,
+  ref: React.RefObject<HTMLElement | null>,
   {
     zFrom = -200,
     zTo = 60,
@@ -82,7 +82,6 @@ export const use3DScroll = (
     rotateTo = -1,
     scaleFrom = 0.95,
     scaleTo = 1,
-    offset = ["start 0.9", "end 0.1"],
   }: {
     zFrom?: number;
     zTo?: number;
@@ -90,12 +89,10 @@ export const use3DScroll = (
     rotateTo?: number;
     scaleFrom?: number;
     scaleTo?: number;
-    offset?: [string, string];
   } = {},
 ) => {
   const { scrollYProgress, scrollY } = useScroll({
     target: ref,
-    offset,
   });
   const velocity = useVelocity(scrollY);
   const velocityBoost = useTransform(velocity, [-900, 0, 900], [1.08, 1, 0.92]);
@@ -113,7 +110,6 @@ export const useSectionMotion = (
 ) => {
   const { scrollYProgress } = useScroll({
     target: ref,
-    offset: config.offset ?? ["start 0.9", "end 0.1"],
   });
 
   const scale = useTransform(scrollYProgress, [0, 1], [config.minScale ?? 0.985, 1]);
